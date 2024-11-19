@@ -60,4 +60,6 @@ workflows:
   build-and-deploy:
     jobs:
       - local-execution
-      - build-and-push
+      - build-and-push:
+          requires:
+            - local-execution
