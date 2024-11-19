@@ -31,7 +31,6 @@ jobs:
             npm test
 
   build-and-push:
-    resource_class: large
     executor: docker-executor
     environment:
       REGISTRY: ayazumman.xyz
@@ -41,7 +40,6 @@ jobs:
 
       - setup_remote_docker:
           docker_layer_caching: true
-          version: 20.10.12
 
       - run:
           name: Build Docker Image
