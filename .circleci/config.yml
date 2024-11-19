@@ -13,7 +13,12 @@ jobs:
     steps:
       - checkout
 
-      - setup_remote_docker: {}
+      - run:
+          name: Setup Environment Variables
+          command: |
+            echo "MONGO_URI=$MONGO_URI" > .env
+            echo "MONGO_USERNAME=$MONGO_USERNAME" >> .env
+            echo "MONGO_PASSWORD=$MONGO_PASSWORD" >> .env
 
       - run:
           name: Install Dependencies
@@ -32,6 +37,8 @@ jobs:
       IMAGE_NAME: circleci/solar-system
     steps:
       - checkout
+
+      - setup_remote_docker: {}
 
       - run:
           name: Build Docker Image
