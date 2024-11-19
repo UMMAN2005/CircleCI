@@ -4,6 +4,7 @@ executors:
   docker-executor:
     docker:
       - image: cimg/node:18.20
+      - image: docker:24.0
     working_directory: ~/app
 
 jobs:
