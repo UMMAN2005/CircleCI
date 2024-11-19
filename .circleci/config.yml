@@ -50,6 +50,7 @@ jobs:
           name: Push Docker Image to Harbor
           command: |
             docker push ${REGISTRY}/${IMAGE_NAME}:${CIRCLE_SHA1}
+            echo "Docker Image Pushed to Harbor"
 
 workflows:
   build-and-deploy:
