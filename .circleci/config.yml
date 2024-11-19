@@ -4,7 +4,6 @@ executors:
   docker-executor:
     docker:
       - image: cimg/node:18.20
-      - image: docker:24.0
     working_directory: ~/app
 
 jobs:
@@ -31,15 +30,13 @@ jobs:
             npm test
 
   build-and-push:
+    resource_class: large
     executor: docker-executor
     environment:
       REGISTRY: ayazumman.xyz
       IMAGE_NAME: circleci/solar-system
     steps:
       - checkout
-
-      - setup_remote_docker:
-          docker_layer_caching: true
 
       - run:
           name: Build Docker Image
