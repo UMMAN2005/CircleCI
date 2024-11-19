@@ -1,0 +1,58 @@
+version: 2.1
+
+executors:
+  docker-executor:
+    docker:
+      - image: cimg/node:18.20
+      - image: docker:24.0
+    working_directory: ~/app
+
+jobs:
+  local-execution:
+    executor: docker-executor
+    environment:
+      DOCKER_VERSION: 20.10.21
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          version: ${DOCKER_VERSION}
+
+      - run:
+          name: Install Dependencies
+          command: |
+            npm install
+
+      - run:
+          name: Run Tests
+          command: |
+            npm test
+
+  build-and-push:
+    executor: docker-executor
+    environment:
+      REGISTRY: ayazumman.xyz
+      IMAGE_NAME: circleci/solar-system
+    steps:
+      - checkout
+
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build -t ${REGISTRY}/${IMAGE_NAME}:${CIRCLE_SHA1} .
+
+      - run:
+          name: Login to Harbor Registry
+          command: |
+            echo $HARBOR_PASSWORD | docker login ayazumman.xyz -u $HARBOR_USERNAME --password-stdin
+
+      - run:
+          name: Push Docker Image to Harbor
+          command: |
+            docker push ${REGISTRY}/${IMAGE_NAME}:${CIRCLE_SHA1}
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - local-execution
+      - build-and-push
