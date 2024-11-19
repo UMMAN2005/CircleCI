@@ -10,13 +10,10 @@ executors:
 jobs:
   local-execution:
     executor: docker-executor
-    environment:
-      DOCKER_VERSION: 20.10.21
     steps:
       - checkout
 
-      - setup_remote_docker:
-          version: ${DOCKER_VERSION}
+      - setup_remote_docker: {}
 
       - run:
           name: Install Dependencies
